@@ -4,18 +4,19 @@
         <currency-input v-model="value" :options="{ currency: 'BRL' }" required/>
 
         <label>Instituição</label>
-        <select multiple id="institution" v-model="selectedInstitutions">
-            <option v-for="item in institutions" v-bind:value="{chave: item.chave}">{{ item }}</option>
+        <select multiple="true" id="institution" v-model="selectedInstitutions">
+            <option v-for="item in institutions" v-bind:value="item.chave">{{ item.valor }}</option>
         </select>
 
         <label>Convênio</label>
-        <select multiple id="covenant" v-model="selectedCovenants">
-            <option v-for="(item, index) in covenants" :value="item.value" :key="index">{{ item }}</option>
+        <select multiple="true" id="covenant" v-model="selectedCovenants">
+            <option v-for="item in covenants" v-bind:value="item.chave">{{ item.valor }}</option>
         </select>
 
         <label>Parcelas</label>
-        <select id="portion">
-            <option v-for="(item, index) in portions" :value="item.value" :key="index">{{ item }}</option>
+        <select id="portion" v-model="selectedPortion" placeholder="Selecione as parcelas">
+            <option disabled selected value="0">Selecione as parcelas</option>
+            <option v-for="(item, index) in portions" :key="index">{{ item }}</option>
         </select>
 
         <div class="submit">
@@ -26,57 +27,42 @@
 
 <script>
 import CurrencyInput from './CurrencyInput';
-import axios from 'axios';
-import env from '@/env.js'
-// import Api from '@/api/Api' 
 
 export default {
     components: { CurrencyInput },
     data () {
         return {
             value: 0,
-            institutions: [],
             selectedInstitutions: [],
-            covenants: [],
             selectedCovenants: [],
-            portions: [36, 48, 60, 72, 84]
+            selectedPortion: 0
         }
     },
-    mounted() {
-        this.loadData();
+    computed: {
+        institutions() {
+            return this.$store.getters['api/getInstitutions'];
+        },
+        covenants() {
+            return this.$store.getters['api/getCovenants'];
+        },
+        portions() {
+            return this.$store.getters['api/getPortions'];
+        }
+    },
+    created() {
+        this.$store.dispatch('api/setInstitutions');
+        this.$store.dispatch('api/setCovenants');
     },
     methods: {
         handleSubmit () {
-            let loanForm = document.getElementById("loanForm");
-            
-            loanForm.querySelector('select[id=institution]');
-
-
             let data = {
                 valor_emprestimo: this.value,
-                instituicoes: this.institutions,
-                convenios: this.covenants,
-                parcelas: this.portions
+                instituicoes:     this.selectedInstitutions,
+                convenios:        this.selectedCovenants,
+                parcelas:         this.selectedPortion
             }
 
-            axios.post(`${env.host}/simular`, data).then(response => {
-                console.log(response)
-            });
-        },
-        loadData() {
-            // Getting institutions
-            axios.get(`${env.host}/instituicao`).then(response => {
-                for(let institution of Object.values(response.data)) {
-                    this.institutions.push(institution.chave);
-                }
-            });
-
-            // Getting covenants
-            axios.get(`${env.host}/convenio`).then(response => {
-                for(let covenant of Object.values(response.data)) {
-                    this.covenants.push(covenant.chave);
-                }
-            });
+            this.$store.dispatch('api/simulate', {data});
         }
     }
 }
