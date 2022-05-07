@@ -4,10 +4,11 @@ import env from '@/env.js'
 export default {
     namespaced: true,
     state: {
+        value: 0,
         institutions: [],
         covenants: [],
         portions: [36, 48, 60, 72, 84],
-        simulation: null
+        simulation: null,
     },
     mutations: {
         setInstitutions(state, value) {
@@ -18,6 +19,9 @@ export default {
         },
         setSimulation(state, value) {
             state.simulation = value;
+        },
+        setValue(state, value) {
+            state.value = value;
         }
     },
     actions: {
@@ -34,6 +38,7 @@ export default {
         simulate({commit}, data) {
             axios.post(`${env.host}/simular`, data.data).then(response => {
                 commit('setSimulation', response.data);
+                commit('setValue', data.data.valor_emprestimo);
             });
         }
     },
@@ -49,6 +54,9 @@ export default {
         },
         getSimulation: state => {
             return state.simulation;
+        },
+        getValue: state => {
+            return state.value;
         }
     }
 }

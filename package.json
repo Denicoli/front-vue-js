@@ -12,10 +12,12 @@
     "vue": "^3.2.13",
     "vue-currency-input": "^2.4.0",
     "vue-multiselect": "^2.1.6",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuetify": "^2.1.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "vue-cli-plugin-vuetify": "~2.4.8"
   }
 }
