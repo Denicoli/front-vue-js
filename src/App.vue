@@ -1,15 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <h1>Empréstimo</h1>
+  <LoanForm/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoanForm from './components/LoanForm.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    LoanForm
   }
 }
 </script>
@@ -22,5 +22,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+body {
+  margin: 0;
+  background: #eee;
+}
+
+h1 {
+  color: #EF6C00;
 }
 </style>
